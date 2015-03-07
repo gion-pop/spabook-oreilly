@@ -8,7 +8,7 @@
 
 /** standard selector */
 body {
-    font-size: 13px;
+    font-size: 10pt;
     font-family: 'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;
     color: #444;
     background-color: #888;
@@ -35,17 +35,14 @@ strong {
 /** spa namespace selector */
 #spa {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    bottom: 8px;
-    right: 8px;
-
-    min-height: 500px;
-    min-width: 500px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #fff;
+    min-height: 15em;
+    min-width: 35em;
     overflow: hidden;
-
-    background-color: #fff;
-    border-radius: 0 8px 0 8px;
 }
 
 /** utility selector */
