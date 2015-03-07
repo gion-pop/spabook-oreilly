@@ -193,6 +193,9 @@ spa.shell = (function() {
             schema_map: configMap.anchor_schema_map
         });
 
+        spa.chat.configModule({});
+        spa.chat.initModule(jqueryMap.$chat);
+
         $(window)
             .bind('hashchange', onHashChange)
             .trigger('hashchange');
