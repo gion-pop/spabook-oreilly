@@ -64,7 +64,9 @@ spa.chat = (function() {
         setSliderPosition,
         onClickToggle,
         configModule,
-        initModule;
+        initModule,
+        removeSlider,
+        handleResize;
 
 
     setJqueryMap = function() {
@@ -245,6 +247,8 @@ spa.chat = (function() {
     return {
         setSliderPosition: setSliderPosition,
         configModule: configModule,
-        initModule: initModule
+        initModule: initModule,
+        removeSlider: removeSlider,
+        handleResize: handleResize
     };
 })();
