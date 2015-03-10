@@ -209,6 +209,7 @@ spa.model = function() {
             _leave_chat,
             join_chat;
 
+        
         _update_list = function(arg_list) {
             var i, person_map, make_person_map,
                 people_list = arg_list[0];
@@ -288,27 +289,12 @@ spa.model = function() {
 
 
     initModule = function() {
-        var i, people_list, person_map;
-
         stateMap.anon_user = makePerson({
             cid: configMap.anon_id,
             id: configMap.anon_id,
             name: 'Anonymous'
         });
         stateMap.user = stateMap.anon_user;
-
-        if (isFakeData) {
-            people_list = spa.fake.getPeopleList();
-            for (i = 0; i < people_list.length; i++) {
-                person_map = people_list[i];
-                makePerson({
-                    cid: person_map._id,
-                    css_map: person_map.css_map,
-                    id: person_map._id,
-                    name: person_map.name
-                });
-            }
-        }
     };
 
 
