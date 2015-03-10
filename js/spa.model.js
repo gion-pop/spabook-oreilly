@@ -15,7 +15,8 @@ spa.model = function() {
             cid_serial: 0,
             people_cid_map: {},
             people_db: TAFFY(),
-            user: null
+            user: null,
+            is_connected: false
         },
         isFakeData = true,
         personProto,
@@ -25,6 +26,7 @@ spa.model = function() {
         makePerson,
         removePerson,
         people,
+        chat,
         initModule;
 
 
@@ -201,6 +203,90 @@ spa.model = function() {
     }());
 
 
+    chat = (function() {
+        var _publish_listchange,
+            _update_list,
+            _leave_chat,
+            join_chat;
+
+        _update_list = function(arg_list) {
+            var i, person_map, make_person_map,
+                people_list = arg_list[0];
+
+            clearPeopleDB();
+
+            for (i = 0; i < people_list.length; i++) {
+                person_map = people_list[i];
+
+                if (!person_map.name) {
+                    continue;
+                }
+
+                if (stateMap.user && stateMap.user.id === person_map._id) {
+                    stateMap.user.css_map = person_map.css_map;
+                    continue;
+                }
+
+                make_person_map = {
+                    cid: person_map._id,
+                    css_map: person_map.css_map,
+                    id: person_map._id,
+                    name: person_map.name
+                };
+
+                makePerson(make_person_map);
+            }
+
+            stateMap.people_db.sort('name');
+        };
+
+
+        _publish_listchange = function(arg_list) {
+            _update_list(arg_list);
+            $.gevent.publish('spa-listchange', [arg_list]);
+        };
+
+
+        _leave_chat = function() {
+            var sio = isFakeData? spa.fake.mockSio: spa.data.getSio();
+            stateMap.is_connected = false;
+            if (sio) {
+                sio.emit('leavechat');
+            }
+        };
+
+        /**
+         * Joins the chat room.
+         * This routine sets up the chat protocol with the backend including
+         * publishers for 'spa-listchange' and 'spa-updatechat' global custom events.
+         * @returns {boolean} false if the current user is anonymous
+         */
+        join_chat = function() {
+            var sio;
+
+            if (stateMap.is_connected) {
+                return false;
+            }
+
+            if (stateMap.user.get_is_anon()) {
+                console.warn('User must be defined before joining chat');
+                return false;
+            }
+
+            sio = isFakeData? spa.fake.mockSio: spa.data.getSio();
+            sio.on('listchange', _publish_listchange);
+            stateMap.is_connected = true;
+            return true;
+        };
+
+
+        return {
+            _leave: _leave_chat,
+            join: join_chat
+        };
+    })();
+
+
     initModule = function() {
         var i, people_list, person_map;
 
@@ -228,6 +314,7 @@ spa.model = function() {
 
     return {
         initModule: initModule,
+        chat: chat,
         people: people
     };
 }();
