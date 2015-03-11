@@ -213,6 +213,7 @@ spa.model = function() {
             join_chat,
             send_msg,
             set_chatee,
+            update_avater,
             chatee = null;
 
 
@@ -379,12 +380,29 @@ spa.model = function() {
         };
 
 
+        /**
+         * Send the update_avtr_map to the backend.
+         * This results in an 'spa-listchange' event which publishes the updated
+         * people list and avatar information (the css_map in the person objects).
+         * The update_avtr_map must have the form:
+         * { person_id : person_id, css_map : css_map }
+         * @param avatar_update_map
+         */
+        update_avater = function(avatar_update_map) {
+            var sio = isFakeData? spa.fake.mockSio: spa.data.getSio();
+            if (sio) {
+                sio.emit('updateavatar', avatar_update_map);
+            }
+        };
+
+
         return {
             _leave: _leave_chat,
             get_chatee: get_chatee,
             join: join_chat,
             send_msg: send_msg,
-            set_chatee: set_chatee
+            set_chatee: set_chatee,
+            update_avatar: update_avater
         };
     })();
 
