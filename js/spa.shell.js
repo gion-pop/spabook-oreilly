@@ -219,6 +219,12 @@ spa.shell = (function() {
         });
         spa.chat.initModule(jqueryMap.$container);
 
+        spa.avtr.configModule({
+            chat_model: spa.model.chat,
+            people_model: spa.model.people
+        });
+        spa.avtr.initModule(jqueryMap.$nav);
+
         $(window)
             .bind('resize', onResize)
             .bind('hashchange', onHashChange)
